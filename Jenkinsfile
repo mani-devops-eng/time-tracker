@@ -1,13 +1,13 @@
-pipeline {
+pipeline{
     agent any
-    stages {
+    stages{
         stage('Build Application') {
-            steps {
-                sh 'mvn -f time-tracker/pom.xml clean package'
+            steps{
+                sh 'mvn time-tracker/pom.xml clean package'
             }
-            post {
-                success {
-                    echo "Now Archiving the Artifacts...."
+            post{
+                success{
+                    echo 'Now Archiving the Artifacts....'
                     archiveArtifacts artifacts: '**/*.war'
                 }
             }
@@ -17,7 +17,6 @@ pipeline {
                 build job: 'Deploy_Application_Stag Area'
  
             }
-            
         }
         stage('Deploy to Production'){
             steps{
