@@ -1,26 +1,34 @@
-pipeline {
-      agent any
-      stages {
-            stage('Init') {
-                  steps {
-                        echo 'Hi, this is Anshul from LevelUp360'
-                        echo 'We are Starting the Testing'
-                  }
+pipeline{
+    agent any{
+        stages{
+            stage('Build Application'){
+                steps{
+                    sh mvn -f time-tracker/pom.xml clean package
+
+                }
+                post{
+                    success{
+                        echo "now archiving artifacts....."
+                        archiveArtifacts artifacts: '**/*.war'
+                    }
+                }
             }
-            stage('Build') {
-                  steps {
-                        echo 'Building Sample Maven Project'
-                  }
-            }
-            stage('Deploy staging') {
-                  steps {
-                        echo "Deploying in Staging Area"
-                  }
-            }
-            stage('Deploy Production') {
-                  steps {
-                        echo "Deploying in Production Area"
-                  }
-            }
-      }
+            
+            stage('Deploy in Staging Environment'){
+               steps{
+                    build job: 'Deploy_Application_Staging_Env'
+ 
+               }
+            
+           }
+            stage('Deploy to Production'){
+                steps{
+                    timeout(time:5, unit:'DAYS'){
+                       input message:'Approve PRODUCTION Deployment?'
+                    }
+                build job: 'Deploy_Application_Prod_Env'
+                }
+           }
+        }
+    }
 }
