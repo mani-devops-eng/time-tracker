@@ -3,7 +3,7 @@ pipeline{
     stages{
         stage('Build Application') {
             steps{
-                sh 'mvn time-tracker/pom.xml clean package'
+                sh 'mvn -f time-tracker/pom.xml clean package'
             }
             post{
                 success{
@@ -15,7 +15,6 @@ pipeline{
         stage('Deploy in Staging Environment'){
             steps{
                 build job: 'Deploy_Application_Stag Area'
- 
             }
         }
         stage('Deploy to Production'){
