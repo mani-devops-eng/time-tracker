@@ -3,7 +3,8 @@ pipeline{
     stages{
         stage('Build Application') {
             steps{
-                sh 'mvn --f time-tracker/pom.xml clean package'
+                sh "mvn clean package"
+                //sh 'mvn --f time-tracker/pom.xml clean package'
                 //buildInfo = rtMaven.run pom: 'time-tracker/pom.xml', goals: 'clean package'
             }
             post{
