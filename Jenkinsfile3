@@ -14,11 +14,18 @@ pipeline{
                 }
             }
         }
-       stage('create tomcat docker image '){
-           steps{
-               /* groovylint-disable-next-line GStringExpressionWithinString */
-               sh 'docker build . -t tomcatsamplewebapp:${evn.BUILD_ID}'
-           }
-       }
+        stage('Deploy in Staging Environment'){
+            steps{
+                build job: 'Deploy_Application_Stag Area'
+            }
+        }
+        stage('Deploy to Production'){
+            steps{
+                timeout(time:5, unit:'DAYS'){
+                    input message:'Approve PRODUCTION Deployment?'
+                }
+                build job: 'Deploy_Application_Production'
+            }
+        }
     }
 }
